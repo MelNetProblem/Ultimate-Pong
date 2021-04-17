@@ -7,6 +7,8 @@ clock=time.Clock()
 game= True
 speed_x = 4
 speed_y = 4
+sad1 =0
+sad2 =0
 class GameSprite(sprite.Sprite):
     def __init__(self,player_image,player_x,player_y, size_x, size_y, player_speed):
         super().__init__()
@@ -38,11 +40,14 @@ class Enemy(GameSprite):
             self.rect.y = 0
             self.rect.x = randint(100,600)
             lose+=1
-platform_l= Player("dsad.png",20,200,70,70,10)
-platform_r= Player("tako.png",610,200,70,70,10)
-ball = GameSprite("balls.png",250,300,35,35,0)
-
-font1 = font.Font
+platform_l= Player("dsad.png",20,200,70,70,7)
+platform_r= Player("tako.png",610,200,70,70,7)
+ball = GameSprite("balls.png",250,300,45,45,0)
+font.init()
+font1 = font.Font("Thintel.ttf",35)
+score1 = font1.render("2 player - " + str(sad1),True,(255,255,255))
+font2 = font.Font("Thintel.ttf",35)
+score2 = font2.render("1 player - " + str(sad2),True,(255,255,255))
 #aggy birsds
 
 
@@ -51,18 +56,29 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+
+    if ball.rect.x < 0 :
+        sad1+=1
+        speed_x *= -1
+    if ball.rect.x > 670 :
+        sad2+=1
+        speed_x *= -1
     if ball.rect.y > 470 or ball.rect.y < 10:
         speed_y *= -1
     if sprite.collide_rect(platform_l,ball) or sprite.collide_rect(platform_r,ball):
         speed_x *= -1
-    clock.tick(fps)
     ball.rect.x += speed_x
     ball.rect.y += speed_y
+    score1 = font1.render("2 player - " + str(sad1),True,(255,255,255))
+    window.blit(score1,(590,10))
+    score2 = font2.render("1 player - " + str(sad2),True,(255,255,255))
+    window.blit(score2,(10,10))
     platform_l.reset()
     platform_r.reset()
     ball.reset()
     platform_l.update_l()
     platform_r.update_r()
+    clock.tick(fps)
     display.update()    
 
 
